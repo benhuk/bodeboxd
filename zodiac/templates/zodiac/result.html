@@ -35,6 +35,27 @@
         </div>
     </div>
 
+    {% if perfil.cat %}
+    <div class="cat-card">
+        <div class="cat-card-copy">
+            <p class="cat-label">Companheiro felino</p>
+            <h4>{% if perfil.cat.breed_name %}{{ perfil.cat.breed_name }}{% else %}Gato aleatório{% endif %}</h4>
+            {% if perfil.cat.signo %}
+                <p class="cat-meta">Inspirado em {{ perfil.cat.signo }}</p>
+            {% endif %}
+            {% if perfil.cat.temperament %}
+                <p class="cat-meta">{{ perfil.cat.temperament }}</p>
+            {% endif %}
+            {% if perfil.cat.personalidade %}
+                <p class="cat-phrase">"{{ perfil.cat.personalidade }}"</p>
+            {% endif %}
+        </div>
+        {% if perfil.cat.image_url %}
+            <img src="{{ perfil.cat.image_url }}" alt="Ilustração felina de {{ perfil.cat.signo }}" class="cat-image">
+        {% endif %}
+    </div>
+    {% endif %}
+
     <div class="stats-grid">
         <div class="stat">
             <span class="stat-num">{{ perfil.total_filmes }}</span>

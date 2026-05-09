@@ -12,6 +12,7 @@ Bodeboxd é um projeto Django que conecta Letterboxd e zodíaco. A aplicação a
 - Descobre o signo cinéfilo com base nos gêneros favoritos
 - Mostra estatísticas, filmes favoritos e uma seleção de filmes relacionados ao perfil
 - Compara dois usuários e calcula a compatibilidade cinéfila
+- Exibe um gato local escolhido de acordo com o signo cinéfilo
 - Interface em português, com visual responsivo e carregamento dinâmico
 
 ## Tecnologias
@@ -19,6 +20,7 @@ Bodeboxd é um projeto Django que conecta Letterboxd e zodíaco. A aplicação a
 - Python
 - Django 6
 - `letterboxdpy`
+- SVGs locais
 - HTML, CSS e JavaScript
 
 ## Capturas de Tela
@@ -104,6 +106,7 @@ http://127.0.0.1:8000/
 ## Observações
 
 - O projeto depende de perfis públicos do Letterboxd.
+- As ilustrações felinas são locais e não dependem de API externa.
 - Se você for publicar no GitHub, não envie `venv/`, `db.sqlite3` ou caches de Python.
 
 ## Licença

@@ -178,6 +178,67 @@ header h1 a {
     line-height: 1.4;
 }
 
+/* Cat card */
+.cat-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: linear-gradient(135deg, #1c2228, #151a1f);
+    border: 1px solid #2c3440;
+    border-radius: 14px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.cat-card-copy {
+    flex: 1;
+    min-width: 0;
+}
+
+.cat-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #00e054;
+    margin-bottom: 0.35rem;
+}
+
+.cat-card h4 {
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 0.35rem;
+}
+
+.cat-meta,
+.cat-origin {
+    color: #9ab;
+    font-size: 0.82rem;
+    line-height: 1.4;
+}
+
+.cat-phrase {
+    color: #fff;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    margin-top: 0.45rem;
+    font-style: italic;
+}
+
+.cat-origin {
+    margin-top: 0.2rem;
+}
+
+.cat-image {
+    width: 92px;
+    height: 92px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #2c3440;
+    flex-shrink: 0;
+}
+
 /* Stats grid */
 .stats-grid {
     display: flex;

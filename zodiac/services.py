@@ -1,6 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
-from functools import lru_cache
 import time
+
+from django.templatetags.static import static
 
 from letterboxdpy.constants.project import DOMAIN, GENRES
 from letterboxdpy.core.scraper import parse_url
@@ -174,7 +175,7 @@ def _extrair_generos(username):
 def _buscar_top_filmes(usuario):
     """Filmes com nota >= 4.0, ordenados por rating desc."""
     top = {}
-    with ThreadPoolExecutor(max_workers=3) as pool:
+    with ThreadPoolExecutor(max_workers=2) as pool:
         futures = {
             pool.submit(usuario.get_films_by_rating, r): r
             for r in [5, 4.5, 4]
@@ -199,6 +200,145 @@ def _buscar_top_filmes(usuario):
 # Cache simples com TTL de 2 horas
 _cache = {}
 _CACHE_TTL = 2 * 60 * 60
+
+CATS_BY_SIGN = {
+    "Áries": {
+        "image": "aries.svg",
+        "breed_name": "Abyssinian",
+        "temperament": "Energético, ousado e sempre em movimento",
+    },
+    "Touro": {
+        "image": "taurus.svg",
+        "breed_name": "British Shorthair",
+        "temperament": "Calmo, firme e muito ligado ao conforto",
+    },
+    "Gêmeos": {
+        "image": "gemini.svg",
+        "breed_name": "Siamese",
+        "temperament": "Curioso, comunicativo e impossível de ignorar",
+    },
+    "Câncer": {
+        "image": "cancer.svg",
+        "breed_name": "Ragdoll",
+        "temperament": "Sensível, afetuoso e naturalmente acolhedor",
+    },
+    "Leão": {
+        "image": "leo.svg",
+        "breed_name": "Maine Coon",
+        "temperament": "Teatral, orgulhoso e carismático por natureza",
+    },
+    "Virgem": {
+        "image": "virgo.svg",
+        "breed_name": "Russian Blue",
+        "temperament": "Preciso, observador e discretamente elegante",
+    },
+    "Libra": {
+        "image": "libra.svg",
+        "breed_name": "Birman",
+        "temperament": "Equilibrado, encantador e muito esteta",
+    },
+    "Escorpião": {
+        "image": "scorpio.svg",
+        "breed_name": "Bombay",
+        "temperament": "Intenso, magnético e um pouco misterioso",
+    },
+    "Sagitário": {
+        "image": "sagittarius.svg",
+        "breed_name": "Egyptian Mau",
+        "temperament": "Aventureiro, veloz e difícil de prender",
+    },
+    "Capricórnio": {
+        "image": "capricorn.svg",
+        "breed_name": "Persian",
+        "temperament": "Composto, disciplinado e atemporal",
+    },
+    "Aquário": {
+        "image": "aquarius.svg",
+        "breed_name": "Sphynx",
+        "temperament": "Original, fora da curva e de cabeça no futuro",
+    },
+    "Peixes": {
+        "image": "pisces.svg",
+        "breed_name": "Norwegian Forest Cat",
+        "temperament": "Sonhador, intuitivo e difícil de acordar",
+    },
+    "Plutão": {
+        "image": "plutao.svg",
+        "breed_name": "Black Cat",
+        "temperament": "Sombreado, enigmático e quase mítico",
+    },
+    "Netuno": {
+        "image": "netuno.svg",
+        "breed_name": "Turkish Angora",
+        "temperament": "Fluido, artístico e um pouco etéreo",
+    },
+    "Saturno": {
+        "image": "saturno.svg",
+        "breed_name": "Chartreux",
+        "temperament": "Alma antiga, presença séria e calma",
+    },
+    "Júpiter": {
+        "image": "jupiter.svg",
+        "breed_name": "Scottish Fold",
+        "temperament": "Expansivo, otimista e brincalhão",
+    },
+    "Marte": {
+        "image": "marte.svg",
+        "breed_name": "Bengal",
+        "temperament": "Cheio de velocidade, ação e fogo",
+    },
+    "Vênus": {
+        "image": "venus.svg",
+        "breed_name": "Persian",
+        "temperament": "Suave, elegante e feito para bons momentos",
+    },
+    "Mercúrio": {
+        "image": "mercurio.svg",
+        "breed_name": "Oriental Shorthair",
+        "temperament": "Afiado, rápido e sempre um passo à frente",
+    },
+    "Ofiúco": {
+        "image": "ofiuco.svg",
+        "breed_name": "Savannah",
+        "temperament": "Raro, fora do comum e difícil de classificar",
+    },
+}
+
+PERSONALITY_PHRASES = {
+    "Áries": "Entra na sala como trailer de ação e já quer a cena de perseguição.",
+    "Touro": "Só sai do conforto se a recompensa vier junto e em boa porção.",
+    "Gêmeos": "Tem mais abas abertas na cabeça do que no navegador.",
+    "Câncer": "Finge que é duro, mas já emocionou com um filme de 12 segundos.",
+    "Leão": "Não quer protagonismo. Exige.",
+    "Virgem": "Reparou no erro que ninguém viu e agora não consegue desver.",
+    "Libra": "Demora mais pra escolher o filme do que pra assistir inteiro.",
+    "Escorpião": "Sai de cena quieto, mas já entendeu tudo antes dos créditos.",
+    "Sagitário": "Se perder a pipoca, já considera isso uma aventura.",
+    "Capricórnio": "Tem planilha até para decidir o que vai maratonar.",
+    "Aquário": "Inventou uma opinião nova só porque a convencional estava chata.",
+    "Peixes": "Mora um pouco no sonho, um pouco no drama e um pouco no replay.",
+    "Plutão": "É o gato que aparece no corredor e muda o clima do lugar.",
+    "Netuno": "Vive num universo paralelo onde tudo vira estética.",
+    "Saturno": "Age como se já tivesse vivido três eras do cinema.",
+    "Júpiter": "Acha que qualquer problema melhora com mais um filme e mais uma piada.",
+    "Marte": "Fica parado só entre uma explosão e outra.",
+    "Vênus": "Consegue transformar até lista de filmes em coisa charmosa.",
+    "Mercúrio": "Pensa tão rápido que até a legenda fica para trás.",
+    "Ofiúco": "Ninguém entendeu, mas todo mundo respeita.",
+}
+
+
+def _buscar_gato_por_signo(signo_nome):
+    """Retorna uma ilustração local associada ao signo."""
+    data = CATS_BY_SIGN.get(signo_nome, CATS_BY_SIGN["Ofiúco"])
+    return {
+        "image_url": static(f"zodiac/cats/{data['image']}"),
+        "source_url": None,
+        "breed_name": data["breed_name"],
+        "temperament": data["temperament"],
+        "personalidade": PERSONALITY_PHRASES.get(signo_nome, PERSONALITY_PHRASES["Ofiúco"]),
+        "signo": signo_nome,
+    }
 
 
 def buscar_perfil(username):
@@ -248,6 +388,7 @@ def buscar_perfil(username):
     ]
 
     signo = descobrir_signo(top_generos)
+    gato = _buscar_gato_por_signo(signo["nome"])
 
     # Ascendente (3° gênero)
     ascendente = None
@@ -272,6 +413,7 @@ def buscar_perfil(username):
         "signo": signo,
         "ascendente": ascendente,
         "playlist": top_filmes[:12],
+        "cat": gato,
     }
 
     _cache[username] = (resultado, time.time())
