@@ -1,0 +1,122 @@
+{% extends "zodiac/base.html" %}
+
+{% block title %}Compatibilidade Cinéfila — Bodeboxd{% endblock %}
+
+{% block content %}
+{% if resultado %}
+    <div class="compat-header">
+        <div class="compat-user">
+            {% if perfil1.avatar_url %}
+                <img src="{{ perfil1.avatar_url }}" alt="{{ perfil1.username }}" class="avatar-sm">
+            {% endif %}
+            <div>
+                <strong>{{ perfil1.username }}</strong>
+                <span class="compat-signo">{{ perfil1.signo.emoji }} {{ perfil1.signo.nome }}</span>
+            </div>
+        </div>
+        <span class="compat-vs">vs</span>
+        <div class="compat-user">
+            {% if perfil2.avatar_url %}
+                <img src="{{ perfil2.avatar_url }}" alt="{{ perfil2.username }}" class="avatar-sm">
+            {% endif %}
+            <div>
+                <strong>{{ perfil2.username }}</strong>
+                <span class="compat-signo">{{ perfil2.signo.emoji }} {{ perfil2.signo.nome }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="compat-score-card">
+        <span class="compat-emoji">{{ resultado.emoji }}</span>
+        <div class="compat-meter">
+            <div class="compat-meter-fill" style="--compat-pct: {{ resultado.score }}%"></div>
+        </div>
+        <span class="compat-pct">{{ resultado.score }}%</span>
+        <h3>{{ resultado.veredicto }}</h3>
+        {% if resultado.mesmo_signo %}
+            <p class="compat-badge">Mesmo signo!</p>
+        {% endif %}
+    </div>
+
+    {% if resultado.generos_comum %}
+    <div class="section">
+        <h4>Gêneros em comum</h4>
+        <div class="favoritos-list">
+            {% for g in resultado.generos_comum %}
+                <span class="fav-item">{{ g }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if resultado.filmes_comum %}
+    <div class="section">
+        <h4>Filmes que ambos amam</h4>
+        <div class="filmes-recomendados">
+            {% for filme in resultado.filmes_comum %}
+                <div class="filme-rec">
+                    <span class="filme-num">{{ forloop.counter }}</span>
+                    <span class="filme-nome">{{ filme }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="compat-links">
+        <a href="{% url 'zodiac:resultado' perfil1.username %}">Ver {{ perfil1.username }}</a>
+        <a href="{% url 'zodiac:resultado' perfil2.username %}">Ver {{ perfil2.username }}</a>
+    </div>
+
+    <a href="{% url 'zodiac:compatibilidade' %}" class="voltar">Comparar outros</a>
+
+{% else %}
+    {% if erro %}
+        <div class="erro-card">
+            <p>{{ erro }}</p>
+        </div>
+    {% endif %}
+
+    <form method="post" class="search-form" id="compat-form">
+        {% csrf_token %}
+
+        <label for="{{ form.username1.id_for_label }}">{{ form.username1.label }}</label>
+        {{ form.username1 }}
+
+        <label for="{{ form.username2.id_for_label }}">{{ form.username2.label }}</label>
+        {{ form.username2 }}
+
+        <button type="submit">Comparar signos</button>
+    </form>
+
+    <div id="loading" class="loading hidden">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Comparando cartas astrais...</p>
+        <p class="loading-sub" id="loading-sub"></p>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if not resultado %}
+<script>
+(function() {
+    var form = document.getElementById('compat-form');
+    var loading = document.getElementById('loading');
+    var sub = document.getElementById('loading-sub');
+    var msgs = [
+        'Analisando o primeiro perfil...',
+        'Agora o segundo...',
+        'Cruzando as estrelas...',
+        'Calculando compatibilidade cósmica...',
+    ];
+    form.addEventListener('submit', function() {
+        form.classList.add('hidden');
+        loading.classList.remove('hidden');
+        var i = 0;
+        setInterval(function() { sub.textContent = msgs[i++ % msgs.length]; }, 2500);
+    });
+})();
+</script>
+{% endif %}
+{% endblock %}

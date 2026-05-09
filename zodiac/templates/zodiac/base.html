@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bodeboxd — Zodíaco Cinéfilo{% endblock %}</title>
+
+    {% block og_tags %}
+    <meta property="og:title" content="Bodeboxd — Zodíaco Cinéfilo">
+    <meta property="og:description" content="Descubra qual signo do zodíaco combina com seu gosto cinematográfico">
+    <meta property="og:type" content="website">
+    {% endblock %}
+
+    <link rel="stylesheet" href="{% static 'zodiac/style.css' %}">
+</head>
+<body>
+    <main class="container">
+        <header>
+            <h1><a href="{% url 'zodiac:home' %}">Bodeboxd</a></h1>
+            <p class="subtitle">Descubra seu Signo Cinéfilo</p>
+            <nav class="nav-links">
+                <a href="{% url 'zodiac:home' %}">Meu signo</a>
+                <a href="{% url 'zodiac:compatibilidade' %}">Compatibilidade</a>
+            </nav>
+        </header>
+
+        {% block content %}{% endblock %}
+
+        <footer>
+            <p>Feito com 🍿 e Python</p>
+        </footer>
+    </main>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

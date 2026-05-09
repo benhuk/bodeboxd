@@ -1,0 +1,148 @@
+{% extends "zodiac/base.html" %}
+
+{% block title %}{{ perfil.username }} é {{ perfil.signo.nome }} {{ perfil.signo.emoji }} — Bodeboxd{% endblock %}
+
+{% block og_tags %}
+{% if perfil %}
+<meta property="og:title" content="{{ perfil.username }} é {{ perfil.signo.nome }} {{ perfil.signo.emoji }}">
+<meta property="og:description" content="{{ perfil.signo.descricao }}">
+<meta property="og:type" content="profile">
+{% if perfil.avatar_url %}
+<meta property="og:image" content="{{ perfil.avatar_url }}">
+{% endif %}
+{% else %}
+{{ block.super }}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if erro %}
+    <div class="erro-card">
+        <p>{{ erro }}</p>
+        <a href="{% url 'zodiac:home' %}">Tentar novamente</a>
+    </div>
+{% else %}
+    <div class="perfil-header">
+        {% if perfil.avatar_url %}
+            <img src="{{ perfil.avatar_url }}" alt="{{ perfil.username }}" class="avatar">
+        {% endif %}
+        <div>
+            <h2>{{ perfil.display_name }}</h2>
+            <span class="perfil-username">@{{ perfil.username }}</span>
+            {% if perfil.bio %}
+                <p class="perfil-bio">{{ perfil.bio }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat">
+            <span class="stat-num">{{ perfil.total_filmes }}</span>
+            <span class="stat-label">Filmes</span>
+        </div>
+        <div class="stat">
+            <span class="stat-num">{{ perfil.este_ano }}</span>
+            <span class="stat-label">Este ano</span>
+        </div>
+        <div class="stat">
+            <span class="stat-num">{{ perfil.following }}</span>
+            <span class="stat-label">Seguindo</span>
+        </div>
+        <div class="stat">
+            <span class="stat-num">{{ perfil.followers }}</span>
+            <span class="stat-label">Seguidores</span>
+        </div>
+        <div class="stat">
+            <span class="stat-num">{{ perfil.watchlist }}</span>
+            <span class="stat-label">Watchlist</span>
+        </div>
+    </div>
+
+    {% if perfil.favoritos %}
+    <div class="section">
+        <h4>Favoritos</h4>
+        <div class="favoritos-list">
+            {% for fav in perfil.favoritos %}
+                <a href="{{ fav.url }}" target="_blank" class="fav-item">{{ fav.nome }} <span class="fav-ano">({{ fav.ano }})</span></a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="section">
+        <h4>Gêneros</h4>
+        <div class="generos-bar-list">
+            {% for g in perfil.generos %}
+                <div class="genero-row">
+                    <span class="genero-nome">{{ g.nome }}</span>
+                    <div class="genero-bar-bg">
+                        <div class="genero-bar animate-bar" style="--bar-width: {{ g.pct }}%"></div>
+                    </div>
+                    <span class="genero-count">{{ g.count }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="signo-card">
+        <span class="emoji">{{ perfil.signo.emoji }}</span>
+        <h3>{{ perfil.signo.nome }}</h3>
+        <p class="signo-generos">
+            {% for g in perfil.top_generos %}
+                {{ g }}{% if not forloop.last %} + {% endif %}
+            {% endfor %}
+        </p>
+        <p>{{ perfil.signo.descricao }}</p>
+        {% if perfil.ascendente %}
+            <p class="ascendente">Ascendente em <strong>{{ perfil.ascendente.nome }}</strong> {{ perfil.ascendente.emoji }}</p>
+        {% endif %}
+    </div>
+
+    {% if perfil.signo.famosos %}
+    <div class="section">
+        <h4>Famosos de {{ perfil.signo.nome }}</h4>
+        <div class="famosos-list">
+            {% for famoso in perfil.signo.famosos %}
+                <span class="famoso-tag">{{ famoso }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if perfil.playlist %}
+    <div class="section">
+        <h4>Sua playlist de {{ perfil.signo.nome }} {{ perfil.signo.emoji }}</h4>
+        <p class="section-desc">Os filmes que provam que você é desse signo</p>
+        <div class="playlist">
+            {% for filme in perfil.playlist %}
+                <a href="{{ filme.url }}" target="_blank" class="playlist-item">
+                    <span class="playlist-num">{{ forloop.counter }}</span>
+                    <div class="playlist-info">
+                        <span class="playlist-nome">{{ filme.nome }}</span>
+                        <span class="playlist-ano">{{ filme.ano }}</span>
+                    </div>
+                    <span class="playlist-nota">{{ filme.nota }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if perfil.signo.filmes %}
+    <div class="section">
+        <h4>Essenciais de {{ perfil.signo.nome }}</h4>
+        <p class="section-desc">Filmes que todo {{ perfil.signo.nome }} deveria assistir</p>
+        <div class="filmes-recomendados">
+            {% for filme in perfil.signo.filmes %}
+                <div class="filme-rec">
+                    <span class="filme-num">{{ forloop.counter }}</span>
+                    <span class="filme-nome">{{ filme }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <a href="{% url 'zodiac:home' %}" class="voltar">Descobrir outro signo</a>
+{% endif %}
+{% endblock %}

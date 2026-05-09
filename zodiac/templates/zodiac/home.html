@@ -1,0 +1,45 @@
+{% extends "zodiac/base.html" %}
+
+{% block content %}
+<form method="post" class="search-form" id="signo-form">
+    {% csrf_token %}
+
+    <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+    {{ form.username }}
+
+    {% if form.username.errors %}
+        <p class="error">{{ form.username.errors.0 }}</p>
+    {% endif %}
+
+    <button type="submit" id="submit-btn">Descobrir meu signo</button>
+</form>
+
+<div id="loading" class="loading hidden">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Consultando os astros...</p>
+    <p class="loading-sub" id="loading-sub"></p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    var form = document.getElementById('signo-form');
+    var loading = document.getElementById('loading');
+    var btn = document.getElementById('submit-btn');
+    var sub = document.getElementById('loading-sub');
+    var msgs = [
+        'Analisando seus gêneros favoritos...',
+        'Mapeando as estrelas do cinema...',
+        'Calculando sua carta astral cinéfila...',
+        'Quase lá, os astros estão alinhando...',
+    ];
+    form.addEventListener('submit', function() {
+        form.classList.add('hidden');
+        loading.classList.remove('hidden');
+        var i = 0;
+        setInterval(function() { sub.textContent = msgs[i++ % msgs.length]; }, 2000);
+    });
+})();
+</script>
+{% endblock %}
