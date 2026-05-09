@@ -2,7 +2,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-6.0-092E20?logo=django&logoColor=white)
-![License](https://img.shields.io/badge/license-unlicensed-lightgrey)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 Bodeboxd é um projeto Django que conecta Letterboxd e zodíaco. A aplicação analisa o perfil de um usuário do Letterboxd e gera um "signo cinéfilo" com base nos gêneros mais assistidos, além de oferecer uma página de compatibilidade entre dois perfis.
 
@@ -108,4 +108,4 @@ http://127.0.0.1:8000/
 
 ## Licença
 
-Adicione a licença que você preferir antes de publicar.
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](/home/felipe/Desktop/latterboxd/LICENSE).
